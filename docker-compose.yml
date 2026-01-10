@@ -1,0 +1,26 @@
+services:
+  php:
+    image: php-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    volumes:
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  tester:
+    build: ./docker/node
+    environment:
+      TARGET_URL: http://php:80
+    depends_on:
+      - php
