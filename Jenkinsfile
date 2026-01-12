@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   stages {
-    stage('Test (docker-compose)') {
+    stage('Test (docker compose)') {
       steps {
         sh 'bash scripts/test.sh'
       }
@@ -11,7 +11,7 @@ pipeline {
 
   post {
     always {
-      sh 'docker-compose down -v || true'
+      sh 'docker compose down -v || true'
     }
   }
 }
