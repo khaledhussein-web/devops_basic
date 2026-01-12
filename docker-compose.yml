@@ -18,16 +18,17 @@ services:
     volumes:
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-  test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-  interval: 5s
-  timeout: 5s
-  retries: 20
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   tester:
     build: ./docker/node
     environment:
       TARGET_URL: http://php:80
     depends_on:
-      - php
-      - mysql:
-          condition: service_healthy
+      mysql:
+        condition: service_healthy
+      php:
+        condition: service_started
