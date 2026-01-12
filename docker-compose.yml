@@ -28,7 +28,7 @@ services:
     environment:
       TARGET_URL: http://php:80
     depends_on:
-      mysql:
-        condition: service_healthy
-      php:
-        condition: service_started
+      -mysql
+      -php
+    
+        
