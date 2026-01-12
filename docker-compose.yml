@@ -28,7 +28,6 @@ services:
     environment:
       TARGET_URL: http://php:80
     depends_on:
-      -mysql
-      -php
-    
-        
+      - mysql
+      - php
+  
