@@ -1,22 +1,22 @@
 services:
   php:
-    image: php-apache
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
     ports:
       - "8080:80"
-    volumes:
-      - ./app:/var/www/html
     depends_on:
       - mysql
 
   mysql:
-    image: mysql:8.0
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: testdb
       MYSQL_USER: testuser
       MYSQL_PASSWORD: testpass
-    volumes:
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -30,4 +30,3 @@ services:
     depends_on:
       - mysql
       - php
-  
