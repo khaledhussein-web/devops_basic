@@ -13,16 +13,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
-    deploy:
-      resources:
-        limits:
-          memory: 512m
 
   php:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    
     environment:
       DB_HOST: mysql
       DB_NAME: testdb
@@ -32,16 +27,13 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ./app:/var/www/html
-    deploy:
-      resources:
-        limits:
-          memory: 512m
+      - ./app:/var/www/html:rw
 
   tester:
-    build: ./docker/node
+    build:
+      context: ./docker/node
     environment:
-      HEALTH_URL: http://php/index.php
+      HEALTH_URL: http://php/health.php
       API_URL: http://php/api.php
     depends_on:
       mysql:
@@ -49,7 +41,3 @@ services:
       php:
         condition: service_started
     command: ["node", "test.js"]
-    deploy:
-      resources:
-        limits:
-          memory: 512m
