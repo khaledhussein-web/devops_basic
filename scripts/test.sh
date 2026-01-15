@@ -2,10 +2,10 @@
 set -e
 
 echo "== Start stack =="
-docker compose up -d --build
+docker compose -f docker-compose.ci.yml up -d --build mysql php
 
 echo "== Run tests =="
-docker compose run --rm tester
+docker compose -f docker-compose.ci.yml run --rm tester
 
 echo "== Done =="
-docker compose down -v
+docker compose -f docker-compose.ci.yml down -v

@@ -1,0 +1,41 @@
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    environment:
+      DB_HOST: mysql
+      DB_NAME: testdb
+      DB_USER: testuser
+      DB_PASS: testpass
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  tester:
+    build:
+      context: ./docker/node
+    environment:
+      HEALTH_URL: http://php/health.php
+      API_URL: http://php/api.php
+    depends_on:
+      mysql:
+        condition: service_healthy
+      php:
+        condition: service_started
+    command: ["node", "test.js"]
