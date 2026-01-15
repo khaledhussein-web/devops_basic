@@ -18,8 +18,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    ports:
-      - "8080:80"
+    
     environment:
       DB_HOST: mysql
       DB_NAME: testdb
