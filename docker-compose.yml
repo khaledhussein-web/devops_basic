@@ -13,6 +13,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+    deploy:
+      resources:
+        limits:
+          memory: 512m
 
   php:
     build:
@@ -29,14 +33,23 @@ services:
         condition: service_healthy
     volumes:
       - ./app:/var/www/html
+    deploy:
+      resources:
+        limits:
+          memory: 512m
 
   tester:
     build: ./docker/node
     environment:
-      TARGET_URL: http://php:80
+      HEALTH_URL: http://php/index.php
+      API_URL: http://php/api.php
     depends_on:
       mysql:
         condition: service_healthy
       php:
         condition: service_started
     command: ["node", "test.js"]
+    deploy:
+      resources:
+        limits:
+          memory: 512m
