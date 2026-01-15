@@ -11,7 +11,7 @@ for ($i = 1; $i -le $max; $i++) {
   }
   Start-Sleep -Seconds 1
   if ($i -eq $max) {
-    Write-Host "❌ MySQL not ready in time"
+    Write-Host "its when sql is not ready yet"
     docker-compose logs mysql
     docker-compose down -v
     exit 1
